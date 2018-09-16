@@ -20,6 +20,17 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <Button
+            android:id="@+id/take_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Take Photo"
+            android:layout_marginTop="10dp"
+            app:layout_constraintBottom_toTopOf="@+id/results"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/select_image_from_gallery" />
+
         <TextView
             android:id="@+id/results"
             android:layout_width="match_parent"
@@ -30,7 +41,7 @@
             app:layout_constraintBottom_toTopOf="@+id/image_preview"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/select_image_from_gallery"/>
+            app:layout_constraintTop_toBottomOf="@+id/take_photo"/>
 
         <ImageView
             android:id="@+id/image_preview"

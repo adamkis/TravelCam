@@ -19,6 +19,9 @@ import java.io.ByteArrayOutputStream
 import android.content.pm.ActivityInfo
 import android.graphics.BitmapFactory
 import android.support.v4.graphics.BitmapCompat
+import android.R.attr.data
+
+
 
 
 class MainActivity : AppCompatActivity() {
@@ -32,6 +35,9 @@ class MainActivity : AppCompatActivity() {
         select_image_from_gallery.setOnClickListener {
             chooseGalleryPhoto()
         }
+        take_photo.setOnClickListener {
+            dispatchTakePictureIntent()
+        }
     }
 
     private fun chooseGalleryPhoto() {
@@ -42,22 +48,35 @@ class MainActivity : AppCompatActivity() {
                 getString(R.string.select_picture)), SELECT_SINGLE_PICTURE)
     }
 
+    val REQUEST_IMAGE_CAPTURE = 1
+
+    private fun dispatchTakePictureIntent() {
+        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        if (takePictureIntent.resolveActivity(packageManager) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+        }
+    }
+
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == SELECT_SINGLE_PICTURE) {
-                val selectedImageUri = data.data
-                try {
+        if (requestCode == SELECT_SINGLE_PICTURE && resultCode == Activity.RESULT_OK) {
+            val selectedImageUri = data.data
+            try {
 //                    var image = FirebaseVisionImage.fromFilePath(applicationContext, uri)
 //                    image = FirebaseVisionImage.fromBitmap(bitmap)
 //                    image_preview.setImageURI(selectedImageUri)
-                    var bitmap = getBitmapFromUri(selectedImageUri)
-                    bitmap = resizeBitmap4(bitmap)
-                    image_preview.setImageBitmap(bitmap)
-                    startLandmarkDetection(bitmap)
-                } catch (e: IOException) {
-                    Log.e(MainActivity::class.java.simpleName, "Failed to load image", e)
-                }
+                var bitmap = getBitmapFromUri(selectedImageUri)
+                bitmap = resizeBitmap4(bitmap)
+                image_preview.setImageBitmap(bitmap)
+                startLandmarkDetection(bitmap)
+            } catch (e: IOException) {
+                Log.e(MainActivity::class.java.simpleName, "Failed to load image", e)
             }
+        } else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
+            val extras = data.extras
+            val imageBitmap = extras.get("data") as Bitmap
+            var bitmap = resizeBitmap4(imageBitmap)
+            image_preview.setImageBitmap(bitmap)
+            startLandmarkDetection(bitmap)
         } else {
             // report failure
             Toast.makeText(applicationContext, R.string.msg_failed_to_get_intent_data, Toast.LENGTH_LONG).show()

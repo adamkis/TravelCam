@@ -26,6 +26,7 @@
             android:layout_height="wrap_content"
             android:text="Results will come here"
             android:layout_marginTop="10dp"
+            android:freezesText="true"
             app:layout_constraintBottom_toTopOf="@+id/image_preview"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
